@@ -68,6 +68,10 @@ namespace NorthwindConsole
                     {
                         displayProducts();
                     }
+                    else if (choice == "8")
+                    {
+                        displayFullSpecificProduct();
+                    }
                     
 
                 } while (choice.ToLower() != escapeValue);
@@ -75,6 +79,22 @@ namespace NorthwindConsole
             catch (Exception ex)
             {
                 Data.getLogger().Error(ex.Message);
+            }
+        }
+
+        private static void displayFullSpecificProduct()
+        {
+            int userChoice = 0;
+            View.viewSpecificProductPrompt();
+
+            string userInput =  Console.ReadLine();
+            if(!Int32.TryParse(userInput, out userChoice))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifyProductID(userChoice))
+            {     
+                View.displaySpecificProduct(Data.GetNorthwindContext().Products.Where(p => p.ProductId == userChoice));
             }
         }
 
@@ -106,6 +126,17 @@ namespace NorthwindConsole
         {
             bool verified = false;
             var results = Data.GetNorthwindContext().Suppliers.Where(p => p.SupplierId == selectedID);
+            if(results.Count()!=0)
+            {
+                verified = true;
+            }
+            return verified;
+        }
+
+        private static bool verifyProductID(int selectedID) //TODO: Make these Validation Result Methods
+        {
+            bool verified = false;
+            var results = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedID);
             if(results.Count()!=0)
             {
                 verified = true;

@@ -189,6 +189,54 @@ namespace NorthwindConsole
 
         // VIEWING PRODUCTS
 
+        public static void viewSpecificProductPrompt()
+        {
+            Console.WriteLine("Select the Product which you want to display in full:");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            foreach (var item in Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId))
+            {
+                Console.WriteLine($"{item.ProductId}) {item.ProductName}");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void displaySpecificProduct(IEnumerable<Product> query)
+        {
+            /*
+            int ProductId // not null
+            string ProductName  // not null max 40 char
+            int? SupplierId // not null
+            int? CategoryId // not null
+            string QuantityPerUnit // max 20 char
+            decimal? UnitPrice
+            short? UnitsInStock
+            short? UnitsOnOrder
+            short? ReorderLevel
+            bool Discontinued // not null
+            */
+            foreach (var item in query)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                System.Console.WriteLine($"Product ID: {item.ProductId}");
+                System.Console.WriteLine($"Product Name: {item.ProductName}");
+                System.Console.WriteLine($"SupplierID: {item.SupplierId}");
+                System.Console.WriteLine($"Quantity Per Unit: {item.QuantityPerUnit}");
+                System.Console.WriteLine($"Unit Price: {item.UnitPrice}");
+                System.Console.WriteLine($"Units In Stock: {item.UnitsInStock}");
+                System.Console.WriteLine($"Units On Order: {item.UnitsOnOrder}");
+                System.Console.WriteLine($"Reorder Level: {item.ReorderLevel}");
+                if(item.Discontinued)
+                {
+                    System.Console.WriteLine("Item Discontinued");
+                }
+                else
+                {
+                    System.Console.WriteLine("Item Active (Not Discontinued)");
+                }
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
         public static void productsViewPrompt()
         {
             System.Console.WriteLine("Please Select One Of The Following Options:");
@@ -199,6 +247,8 @@ namespace NorthwindConsole
             System.Console.WriteLine("3. View Only Discontinued Products");
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        
 
         public static void displayAllProducts(IEnumerable<Product> query)
         {
