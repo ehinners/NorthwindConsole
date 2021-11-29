@@ -36,6 +36,15 @@ namespace NorthwindConsole
             System.Console.WriteLine("Enter {0} to quit",Controller.getEscapeValue());           
         }
 
+        public static void nullCheck()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            System.Console.WriteLine("It Seems One Or More Values Are Not Valid");
+            System.Console.WriteLine("Entering In This Object Will Result In One Or More Null Values");
+            System.Console.WriteLine("Proceed To Enter In Object With Null Values? (Y/N)");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // ----------------------------------------SELECTORS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -101,19 +101,26 @@ namespace NorthwindConsole
         private static string parseBool(string input)
         {
             string result;
-            if(input.ToLower()[0]=='y')
+            if(input.Length >= 1)
             {
-                result = "true";
-            }
-            else if(input.ToLower()[0]=='n')
-            {
-                result = "false";
+                if(input.ToLower()[0]=='y')
+                {
+                    result = "true";
+                }
+                else if(input.ToLower()[0]=='n')
+                {
+                    result = "false";
+                }
+                else
+                {
+                    result = "neither";
+                }
             }
             else
             {
                 result = "neither";
-            }
-
+            }           
+            
             return result;
         }
 
@@ -259,6 +266,58 @@ namespace NorthwindConsole
             {
                 product.Discontinued = false;
                 noNulls = false;
+            }
+            bool permissed = false;
+            if(!noNulls)
+            {
+                View.nullCheck();
+                userInput = Console.ReadLine();
+                yesOrNo = parseBool(userInput);
+                if(yesOrNo == "true")
+                {
+                    permissed = true;
+                }
+                else if(yesOrNo == "false")
+                {
+                    permissed = false;
+                }
+                else
+                {
+                    Data.getLogger().Error("Input Not Recognized");
+                }
+            }
+            else
+            {
+                permissed = true;
+            }
+            if(permissed)
+            {
+                ValidationContext context = new ValidationContext(product, null, null);
+                List<ValidationResult> results = new List<ValidationResult>();
+
+                var isValid = Validator.TryValidateObject(product, context, results, true);
+                if (isValid)
+                {
+                    // check for unique name
+                    if (Data.GetNorthwindContext().Products.Any(p => p.ProductName == product.ProductName))
+                    {
+                        // generate validation error
+                        isValid = false;
+                        results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
+                    }
+                    else
+                    {
+                        Data.getLogger().Info("Validation passed");
+                        // TODO: save product to db
+                    }
+                }
+                if (!isValid)
+                {
+                    foreach (var result in results)
+                    {
+                        Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+                    }
+                }
             }
                
         }
