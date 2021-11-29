@@ -98,6 +98,25 @@ namespace NorthwindConsole
             return verified;
         }
 
+        private static string parseBool(string input)
+        {
+            string result;
+            if(input.ToLower()[0]=='y')
+            {
+                result = "true";
+            }
+            else if(input.ToLower()[0]=='n')
+            {
+                result = "false";
+            }
+            else
+            {
+                result = "neither";
+            }
+
+            return result;
+        }
+
         private static void addProduct()
         {
             /*
@@ -114,6 +133,7 @@ namespace NorthwindConsole
             */
             
             Product product = new Product();
+            bool noNulls = true;
 
             // User Provides New Name
             View.addProdProductNamePrompt();
@@ -127,6 +147,7 @@ namespace NorthwindConsole
             if(!Int32.TryParse(userInput, out tempInt))
             {
                 Data.getLogger().Error("Not Valid Int");
+                noNulls = false;
             }
             else if(verifySupplierID(tempInt))
             {
@@ -135,6 +156,7 @@ namespace NorthwindConsole
             else
             {
                 Data.getLogger().Error("Supplier Not Found");
+                noNulls = false;
             }       
 
             // User Provides Category ID
@@ -145,6 +167,7 @@ namespace NorthwindConsole
             if(!Int32.TryParse(userInput, out tempInt))
             {
                 Data.getLogger().Error("Not Valid Int");
+                noNulls = false;
             }
             else if(verifyCategoryID(tempInt))
             {
@@ -153,25 +176,91 @@ namespace NorthwindConsole
             else
             {
                 Data.getLogger().Error("Category Not Found");
+                noNulls = false;
             }
 
+            // User Provides Quantity Per Unit
             View.addProdQuantityPerUnitPrompt();
             product.QuantityPerUnit = Console.ReadLine();
+            if(product.QuantityPerUnit.Length == 0)
+            {
+                noNulls = false;
+            }
 
+            // User Provides Unit Price
             View.addProdUnitPricePrompt();
-            //product.UnitPrice = Console.ReadLine();
+            decimal tempPrice;
+            userInput =  Console.ReadLine();
+            if(!Decimal.TryParse(userInput, out tempPrice))
+            {
+                Data.getLogger().Error("Not Valid Decimal");
+                noNulls = false;
+            }
+            else
+            {
+                product.UnitPrice = tempPrice;
+            }
 
+            // User Provides Units In Stock
             View.addProdUnitsInStockPrompt();
-            //product.UnitsInStock = Console.ReadLine();
+            short tempUnits;
+            userInput =  Console.ReadLine();
+            if(!short.TryParse(userInput, out tempUnits))
+            {
+                Data.getLogger().Error("Not Valid Number");
+                noNulls = false;
+            }
+            else
+            {
+                product.UnitsInStock = tempUnits;
+            }
 
+            // User Provides Units On Order
             View.addProdUnitsOnOrderPrompt();
-            //product.UnitsOnOrder = Console.ReadLine();
+            tempUnits = 0;
+            userInput =  Console.ReadLine();
+            if(!short.TryParse(userInput, out tempUnits))
+            {
+                Data.getLogger().Error("Not Valid Number");
+                noNulls = false;
+            }
+            else
+            {
+                product.UnitsOnOrder = tempUnits;
+            }
 
+            // User Provides Reorder Level
             View.addProdReorderLevelPrompt();
-            //product.ReorderLevel = Console.ReadLine();
+            tempUnits = 0;
+            userInput =  Console.ReadLine();
+            if(!short.TryParse(userInput, out tempUnits))
+            {
+                Data.getLogger().Error("Not Valid Number");
+                noNulls = false;
+            }
+            else
+            {
+                product.ReorderLevel = tempUnits;
+            }
 
+            // User Provides Discontinued Status
             View.addProdDiscontinuedPrompt();
-            //product.Discontinued = Console.ReadLine();    
+            userInput = Console.ReadLine();
+            string yesOrNo = parseBool(userInput);
+            if(yesOrNo == "true")
+            {
+                product.Discontinued = true;
+            }
+            else if(yesOrNo == "false")
+            {
+                product.Discontinued = false;
+            }
+            else
+            {
+                product.Discontinued = false;
+                noNulls = false;
+            }
+               
         }
 
         private static void addCategory()
