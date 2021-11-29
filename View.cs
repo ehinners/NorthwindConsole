@@ -36,6 +36,24 @@ namespace NorthwindConsole
             System.Console.WriteLine("Enter {0} to quit",Controller.getEscapeValue());           
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // ----------------------------------------SELECTORS----------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public static void displaySuppliers(IEnumerable<Supplier> query)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.SupplierId} - {item.CompanyName}");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // ----------------------------------------CATEGORIES---------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
         public static void displayCategories(IEnumerable<Category> query)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -94,6 +112,55 @@ namespace NorthwindConsole
         public static void addCategoryDescriptionPrompt()
         {
             Console.WriteLine("Enter the Category Description:");
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // -----------------------------------------PRODUCTS----------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public static void addProdProductNamePrompt()
+        {
+            Console.WriteLine("Enter The Product Name:");
+        }
+
+        public static void addProdSupplierIdPrompt()
+        {
+            System.Console.WriteLine("Enter The Supplier ID:");
+        }
+
+        public static void addProdCategoryIdPrompt()
+        {
+            System.Console.WriteLine("Enter The Category ID:");
+        }
+
+        public static void addProdQuantityPerUnitPrompt()
+        {
+            System.Console.WriteLine("Enter The Quantity Per Unit:");
+        }
+
+        public static void addProdUnitPricePrompt()
+        {
+            System.Console.WriteLine("Enter The Unit Price:");
+        }
+
+        public static void addProdUnitsInStockPrompt()
+        {
+            System.Console.WriteLine("Enter The Number of Units In Stock:");
+        }
+
+        public static void addProdUnitsOnOrderPrompt()
+        {
+            System.Console.WriteLine("Enter The Number of Units On Order:");
+        }
+
+        public static void addProdReorderLevelPrompt()
+        {
+            System.Console.WriteLine("Enter The Reorder Level:");
+        }
+
+        public static void addProdDiscontinuedPrompt()
+        {
+            System.Console.WriteLine("Is The Product Discontinued? (Y/N):");
         }
 
                    

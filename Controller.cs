@@ -61,7 +61,7 @@ namespace NorthwindConsole
                     }
                     else if (choice == "5")
                     {
-                        addCategory();
+                        addProduct();
                     }
                     
 
@@ -73,53 +73,73 @@ namespace NorthwindConsole
             }
         }
 
+        private static bool verifySupplierID(int selectedID)
+        {
+            bool verified = false;
+            var results = Data.GetNorthwindContext().Suppliers.Where(p => p.SupplierId == selectedID);
+            if(results.Count()!=0)
+            {
+                verified = true;
+            }
+            return verified;
+        }
+
         private static void addProduct()
         {
             /*
-            int ProductId
-            string ProductName 
-            int? SupplierId 
-            int? CategoryId 
-            string QuantityPerUnit
+            int ProductId // not null
+            string ProductName  // not null max 40 char
+            int? SupplierId // not null
+            int? CategoryId // not null
+            string QuantityPerUnit // max 20 char
             decimal? UnitPrice
             short? UnitsInStock
             short? UnitsOnOrder
             short? ReorderLevel
-            bool Discontinued
+            bool Discontinued // not null
             */
             
             Product product = new Product();
-            //View.addProductProductNamePrompt();
+            View.addProdProductNamePrompt();
             product.ProductName = Console.ReadLine();
 
-            //View.addProductSupplierIdPrompt();
-            //product.SupplierId = Console.ReadLine();
+            View.addProdSupplierIdPrompt();
+            View.displaySuppliers(Data.GetNorthwindContext().Suppliers.OrderBy(p => p.SupplierId));
+            int tempInt = 0;
+            string userInput =  Console.ReadLine();
+            if(!Int32.TryParse(userInput, out tempInt))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifySupplierID(tempInt))
+            {
+                product.SupplierId = tempInt;
+            }     
+            else
+            {
+                Data.getLogger().Error("Supplier Not Found");
+            }       
 
-            //View.addProductCategoryIdPrompt();
+            View.addProdCategoryIdPrompt();
             //product.CategoryId = Console.ReadLine();
 
-            //View.addProductQuantityPerUnitPrompt();
-            //product.QuantityPerUnit = Console.ReadLine();
+            View.addProdQuantityPerUnitPrompt();
+            product.QuantityPerUnit = Console.ReadLine();
 
-            //View.addProductUnitPricePrompt();
+            View.addProdUnitPricePrompt();
             //product.UnitPrice = Console.ReadLine();
 
-            //View.addProductUnitsInStockPrompt();
+            View.addProdUnitsInStockPrompt();
             //product.UnitsInStock = Console.ReadLine();
 
-            //View.addProductUnitsOnOrderPrompt();
+            View.addProdUnitsOnOrderPrompt();
             //product.UnitsOnOrder = Console.ReadLine();
 
-            //View.addProductReorderLevelPrompt();
+            View.addProdReorderLevelPrompt();
             //product.ReorderLevel = Console.ReadLine();
 
-            //View.addProductDiscontinuedPrompt();
-            //product.Discontinued = Console.ReadLine();
-
-            
-
-            
-
+            View.addProdDiscontinuedPrompt();
+            //product.Discontinued = Console.ReadLine();    
         }
 
         private static void addCategory()
