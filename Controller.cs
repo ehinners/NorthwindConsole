@@ -72,11 +72,25 @@ namespace NorthwindConsole
                 Data.getLogger().Error(ex.Message);
             }
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // ---------------------------------------VALIDATORS----------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private static bool verifySupplierID(int selectedID)
+        private static bool verifySupplierID(int selectedID) //TODO: Make these Validation Result Methods
         {
             bool verified = false;
             var results = Data.GetNorthwindContext().Suppliers.Where(p => p.SupplierId == selectedID);
+            if(results.Count()!=0)
+            {
+                verified = true;
+            }
+            return verified;
+        }
+
+        private static bool verifyCategoryID(int selectedID) //TODO: Make these Validation Result Methods
+        {
+            bool verified = false;
+            var results = Data.GetNorthwindContext().Categories.Where(p => p.CategoryId == selectedID);
             if(results.Count()!=0)
             {
                 verified = true;
@@ -100,11 +114,14 @@ namespace NorthwindConsole
             */
             
             Product product = new Product();
+
+            // User Provides New Name
             View.addProdProductNamePrompt();
             product.ProductName = Console.ReadLine();
 
+            // User Provides Supplier ID
             View.addProdSupplierIdPrompt();
-            View.displaySuppliers(Data.GetNorthwindContext().Suppliers.OrderBy(p => p.SupplierId));
+            View.displaySupplierSelect(Data.GetNorthwindContext().Suppliers.OrderBy(p => p.SupplierId));
             int tempInt = 0;
             string userInput =  Console.ReadLine();
             if(!Int32.TryParse(userInput, out tempInt))
@@ -120,8 +137,23 @@ namespace NorthwindConsole
                 Data.getLogger().Error("Supplier Not Found");
             }       
 
+            // User Provides Category ID
             View.addProdCategoryIdPrompt();
-            //product.CategoryId = Console.ReadLine();
+            View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
+            tempInt = 0;
+            userInput =  Console.ReadLine();
+            if(!Int32.TryParse(userInput, out tempInt))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifyCategoryID(tempInt))
+            {
+                product.CategoryId = tempInt;
+            }     
+            else
+            {
+                Data.getLogger().Error("Category Not Found");
+            }
 
             View.addProdQuantityPerUnitPrompt();
             product.QuantityPerUnit = Console.ReadLine();

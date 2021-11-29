@@ -40,12 +40,22 @@ namespace NorthwindConsole
         // ----------------------------------------SELECTORS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public static void displaySuppliers(IEnumerable<Supplier> query)
+        public static void displaySupplierSelect(IEnumerable<Supplier> query)
         {
             Console.ForegroundColor = ConsoleColor.Magenta;
             foreach (var item in query)
             {
                 Console.WriteLine($"{item.SupplierId} - {item.CompanyName}");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void displayCategorySelect(IEnumerable<Category> query)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.CategoryId} - {item.CategoryName}");
             }
             Console.ForegroundColor = ConsoleColor.White;
         }
