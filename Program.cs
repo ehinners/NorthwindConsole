@@ -19,11 +19,11 @@ namespace NorthwindConsole
             “C” (405):
                 [ ]1.Add a new product
                 [ ]2.Edit a specified Product
-                [ ]3.Display all Products (ProductName only) - user decides:
-                    [ ]-all
-                    [ ]-discontinued
-                    [ ]-active (not discontinued)
-                [ ]Discontinued products should be distinguished from active products. (Change Text Color?)
+                [X]3.Display all Products (ProductName only) - user decides:
+                    [X]-all
+                    [X]-discontinued
+                    [X]-active (not discontinued)
+                [X]Discontinued products should be distinguished from active products. (Change Text Color?)
                 [ ]4.Display a specific Product (all product fields should be displayed)
                 [ ]5.Use NLog to track user functions
             “B” (445):

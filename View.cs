@@ -19,11 +19,12 @@ namespace NorthwindConsole
             "4) Display all Categories and their related products",
             "5) Add Product",
             "6) Edit Product",
-            "7) Display Full Specific Product",
-            "8) Edit Category",
-            "9) Display Full Specific Category",
-            "10) Delete Product",
-            "11) Delete Category"
+            "7) Display Products",
+            "8) Display Full Specific Product",
+            "9) Edit Category",
+            "10) Display Full Specific Category",
+            "11) Delete Product",
+            "12) Delete Category"
         };
         
         public static void displayMainMenu()
@@ -44,6 +45,7 @@ namespace NorthwindConsole
             System.Console.WriteLine("Proceed To Enter In Object With Null Values? (Y/N)");
             Console.ForegroundColor = ConsoleColor.White;
         }
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // ----------------------------------------SELECTORS----------------------------------------- //
@@ -72,6 +74,7 @@ namespace NorthwindConsole
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // ----------------------------------------CATEGORIES---------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         public static void displayCategories(IEnumerable<Category> query)
         {
@@ -137,6 +140,8 @@ namespace NorthwindConsole
         // -----------------------------------------PRODUCTS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // CREATING A PRODUCT
+
         public static void addProdProductNamePrompt()
         {
             Console.WriteLine("Enter The Product Name:");
@@ -180,6 +185,71 @@ namespace NorthwindConsole
         public static void addProdDiscontinuedPrompt()
         {
             System.Console.WriteLine("Is The Product Discontinued? (Y/N):");
+        }
+
+        // VIEWING PRODUCTS
+
+        public static void productsViewPrompt()
+        {
+            System.Console.WriteLine("Please Select One Of The Following Options:");
+            System.Console.WriteLine("1. View All Products");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            System.Console.WriteLine("2. View Only Active (Not Discontinued) Products");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            System.Console.WriteLine("3. View Only Discontinued Products");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void displayAllProducts(IEnumerable<Product> query)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{query.Count()} records returned");
+            Console.ForegroundColor = ConsoleColor.White;
+            foreach (var item in query)
+            {
+                if(item.Discontinued)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                }
+                else if(!item.Discontinued)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                Console.WriteLine($"{item.ProductName}");
+            }
+            
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void displayActiveProducts(IEnumerable<Product> query)
+        {
+            
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{query.Count()} records returned");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.ProductName}");
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void displayDiscontinuedProducts(IEnumerable<Product> query)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{query.Count()} records returned");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.ProductName}");
+            }           
+
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
                    

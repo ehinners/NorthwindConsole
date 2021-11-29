@@ -33,11 +33,12 @@ namespace NorthwindConsole
                     "4) Display all Categories and their related products",
                     "5) Add Product",
                     "6) Edit Product",
-                    "7) Display Full Specific Product",
-                    "8) Edit Category",
-                    "9) Display Full Specific Category",
-                    "10) Delete Product",
-                    "11) Delete Category"
+                    "7) Display Products",
+                    "8) Display Full Specific Product",
+                    "9) Edit Category",
+                    "10) Display Full Specific Category",
+                    "11) Delete Product",
+                    "12) Delete Category"
                     */
                     choice = Console.ReadLine();
 
@@ -63,6 +64,10 @@ namespace NorthwindConsole
                     {
                         addProduct();
                     }
+                    else if (choice == "7")
+                    {
+                        displayProducts();
+                    }
                     
 
                 } while (choice.ToLower() != escapeValue);
@@ -71,6 +76,27 @@ namespace NorthwindConsole
             {
                 Data.getLogger().Error(ex.Message);
             }
+        }
+
+        private static void displayProducts()
+        {
+            View.productsViewPrompt();
+
+            string choice = Console.ReadLine();
+                Data.getLogger().Info($"Option {choice} selected");
+
+                if(choice == "1")
+                {
+                    View.displayAllProducts(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
+                }
+                if(choice == "2")
+                {
+                    View.displayActiveProducts(Data.GetNorthwindContext().Products.Where(p => p.Discontinued == false));
+                }
+                if(choice == "3")
+                {
+                    View.displayDiscontinuedProducts(Data.GetNorthwindContext().Products.Where(p => p.Discontinued == true));
+                }
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // ---------------------------------------VALIDATORS----------------------------------------- //
@@ -123,6 +149,8 @@ namespace NorthwindConsole
             
             return result;
         }
+
+        //////////////////////////////////////////////////////////////
 
         private static void addProduct()
         {
