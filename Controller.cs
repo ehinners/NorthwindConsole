@@ -99,6 +99,7 @@ namespace NorthwindConsole
         {
             int userChoice = 0;
             View.viewSpecificProductPrompt();
+            View.displayProductSelect(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
 
             string userInput =  Console.ReadLine();
             if(!Int32.TryParse(userInput, out userChoice))
@@ -154,6 +155,9 @@ namespace NorthwindConsole
             {
                 verified = true;
             }
+            else{
+                Model.Data.getLogger().Error("Product Not Found");
+            }
             return verified;
         }
 
@@ -164,6 +168,9 @@ namespace NorthwindConsole
             if(results.Count()!=0)
             {
                 verified = true;
+            }
+            else{
+                Model.Data.getLogger().Error("Category Not Found");
             }
             return verified;
         }
@@ -184,11 +191,13 @@ namespace NorthwindConsole
                 else
                 {
                     result = "neither";
+                    Model.Data.getLogger().Error("Not Valid Selection");
                 }
             }
             else
             {
                 result = "neither";
+                Model.Data.getLogger().Error("Null Entry Not Accepted");
             }           
             
             return result;
@@ -198,9 +207,11 @@ namespace NorthwindConsole
 
         private static void editProduct()
         {
-            View.viewSpecificProductPrompt();
+            View.editProductSelectionPrompt();
+            View.displayProductSelect(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
             string userInput =  Console.ReadLine();
             int tempInt;
+            short tempUnits;
             int selectedProductID;
             IEnumerable<Product> query;
             Product product;
@@ -213,9 +224,168 @@ namespace NorthwindConsole
                 selectedProductID = tempInt;
                 query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedProductID);
                 product = query.First();
-                System.Console.WriteLine("Enter A New Product Name");
-                product.ProductName = Console.ReadLine();
+
+                bool editing = true;
+
+                while(editing)
+                {
+                    View.editProductOptionsPrompt(product);
+                    string editProductChoice = Console.ReadLine();
+
+                    if(editProductChoice == "1")
+                    {
+                        // User Provides New Name
+                        View.addProdProductNamePrompt();
+                        product.ProductName = Console.ReadLine();
+                         Data.getLogger().Info("Product {0} product name changed", product.ProductName);
+                    }
+
+                    if(editProductChoice == "2")
+                    {
+                        // User Provides Supplier ID
+                        View.addProdSupplierIdPrompt();
+                        View.displaySupplierSelect(Data.GetNorthwindContext().Suppliers.OrderBy(p => p.SupplierId));
+                        tempInt = 0;
+                        userInput =  Console.ReadLine();
+                        if(!Int32.TryParse(userInput, out tempInt))
+                        {
+                            Data.getLogger().Error("Not Valid Int");
+                        }
+                        else if(verifySupplierID(tempInt))
+                        {
+                            product.SupplierId = tempInt;
+                            Data.getLogger().Info("Product {0} Supplier ID changed", product.ProductName);
+                        }     
+                        else
+                        {
+                            Data.getLogger().Error("Supplier Not Found");
+                        }                            
+                    }
+
+                    if(editProductChoice == "3")
+                    {
+                        // User Provides Category ID
+                        View.addProdCategoryIdPrompt();
+                        View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
+                        tempInt = 0;
+                        userInput =  Console.ReadLine();
+                        if(!Int32.TryParse(userInput, out tempInt))
+                        {
+                            Data.getLogger().Error("Not Valid Int");
+                        }
+                        else if(verifyCategoryID(tempInt))
+                        {
+                            product.CategoryId = tempInt;
+                            Data.getLogger().Info("Product {0} Category ID changed", product.ProductName);
+                        }     
+                        else
+                        {
+                            Data.getLogger().Error("Category Not Found");
+                        }
+                        
+                    }
+
+                    if(editProductChoice == "4")
+                    {
+                        // User Provides Quantity Per Unit
+                        View.addProdQuantityPerUnitPrompt();
+                        product.QuantityPerUnit = Console.ReadLine();
+                        Data.getLogger().Info("Product {0} Quantity Per Unit changed", product.ProductName);
+                    }
+
+                    if(editProductChoice == "5")
+                    {
+                        // User Provides Unit Price
+                        View.addProdUnitPricePrompt();
+                        decimal tempPrice;
+                        userInput =  Console.ReadLine();
+                        if(!Decimal.TryParse(userInput, out tempPrice))
+                        {
+                            Data.getLogger().Error("Not Valid Decimal");                            
+                        }
+                        else
+                        {
+                            product.UnitPrice = tempPrice;
+                            Data.getLogger().Info("Product {0} Unit Price changed", product.ProductName);
+                        }
+                    }
+
+                    if(editProductChoice == "6")
+                    {
+                        // User Provides Units In Stock
+                        View.addProdUnitsInStockPrompt();
+                        tempUnits = 0;
+                        userInput =  Console.ReadLine();
+                        if(!short.TryParse(userInput, out tempUnits))
+                        {
+                            Data.getLogger().Error("Not Valid Number");
+                        }
+                        else
+                        {
+                            product.UnitsInStock = tempUnits;
+                            Data.getLogger().Info("Product {0} Units In Stock changed", product.ProductName);
+                        }                        
+                    }
+
+                    if(editProductChoice == "7")
+                    {
+                        // User Provides Units On Order
+                        View.addProdUnitsOnOrderPrompt();
+                        tempUnits = 0;
+                        userInput =  Console.ReadLine();
+                        if(!short.TryParse(userInput, out tempUnits))
+                        {
+                            Data.getLogger().Error("Not Valid Number");
+                        }
+                        else
+                        {
+                            product.UnitsOnOrder = tempUnits;
+                            Data.getLogger().Info("Product {0} Units On Order changed", product.ProductName);
+                        }                        
+                    }
+
+                    if(editProductChoice == "8")
+                    {
+                        // User Provides Reorder Level
+                        View.addProdReorderLevelPrompt();
+                        tempUnits = 0;
+                        userInput =  Console.ReadLine();
+                        if(!short.TryParse(userInput, out tempUnits))
+                        {
+                            Data.getLogger().Error("Not Valid Number");
+                        }
+                        else
+                        {
+                            product.ReorderLevel = tempUnits;
+                            Data.getLogger().Info("Product {0} Reorder changed", product.ProductName);
+                        }                        
+                    }
+
+                    if(editProductChoice == "9")
+                    {
+                        // User Provides Discontinued Status
+                        View.addProdDiscontinuedPrompt();
+                        userInput = Console.ReadLine();
+                        string yesOrNo = parseBool(userInput);
+                        if(yesOrNo == "true")
+                        {
+                            product.Discontinued = true;
+                            Data.getLogger().Info("Product {0} Discontinued Status changed", product.ProductName);
+                        }
+                        else if(yesOrNo == "false")
+                        {
+                            product.Discontinued = false;
+                            Data.getLogger().Info("Product {0} Discontinued Status changed", product.ProductName);
+                        }
+                    }
+
+                    if(editProductChoice.ToLower() == "q")
+                    {
+                        editing = false;
+                    }
+                }
                 Model.Data.GetNorthwindContext().SaveChanges();
+                Data.getLogger().Info("Product {0} edited and saved", product.ProductName);
             }            
         }
 

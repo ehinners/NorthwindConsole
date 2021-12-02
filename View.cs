@@ -70,6 +70,16 @@ namespace NorthwindConsole
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        public static void displayProductSelect(IEnumerable<Product> query)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.ProductId}) {item.ProductName}");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+        }            
+
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // ----------------------------------------CATEGORIES---------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,6 +149,31 @@ namespace NorthwindConsole
         // -----------------------------------------PRODUCTS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // EDITING A PRODUCT
+
+        public static void editProductSelectionPrompt()
+        {
+            System.Console.WriteLine("Please Select The ID Of The Product You'd Like To Edit: ");
+        }
+
+        public static void editProductOptionsPrompt(Product product)
+        {
+            System.Console.WriteLine("Please Enter The Number Of Which Property To Be Edited:");
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            System.Console.WriteLine("1 - Product Name ({0})", product.ProductName);
+            System.Console.WriteLine("2 - Supplier ID ({0})", product.SupplierId);
+            System.Console.WriteLine("3 - Category ID ({0})", product.CategoryId);
+            System.Console.WriteLine("4 - Quantity Per Unit ({0})", product.QuantityPerUnit);;
+            System.Console.WriteLine("5 - Unit Price ({0})", product.UnitPrice);
+            System.Console.WriteLine("6 - Units In Stock ({0})", product.UnitsInStock);
+            System.Console.WriteLine("7 - Units On Order ({0})", product.UnitsOnOrder);
+            System.Console.WriteLine("8 - Reorder Level ({0})", product.ReorderLevel);
+            System.Console.WriteLine("9 - Discontinued ({0})", product.Discontinued ? "True":"False");
+            Console.ForegroundColor = ConsoleColor.Red;
+            System.Console.WriteLine("Or Enter '{0}' to finish editing", Controller.getEscapeValue());
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         // CREATING A PRODUCT
 
         public static void addProdProductNamePrompt()
@@ -191,33 +226,16 @@ namespace NorthwindConsole
         public static void viewSpecificProductPrompt()
         {
             Console.WriteLine("Select the Product which you want to display in full:");
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            foreach (var item in Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId))
-            {
-                Console.WriteLine($"{item.ProductId}) {item.ProductName}");
-            }
-            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void displaySpecificProduct(IEnumerable<Product> query)
         {
-            /*
-            int ProductId // not null
-            string ProductName  // not null max 40 char
-            int? SupplierId // not null
-            int? CategoryId // not null
-            string QuantityPerUnit // max 20 char
-            decimal? UnitPrice
-            short? UnitsInStock
-            short? UnitsOnOrder
-            short? ReorderLevel
-            bool Discontinued // not null
-            */
             foreach (var item in query)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 System.Console.WriteLine($"Product ID: {item.ProductId}");
                 System.Console.WriteLine($"Product Name: {item.ProductName}");
+                System.Console.WriteLine($"CategoryID: {item.CategoryId}");
                 System.Console.WriteLine($"SupplierID: {item.SupplierId}");
                 System.Console.WriteLine($"Quantity Per Unit: {item.QuantityPerUnit}");
                 System.Console.WriteLine($"Unit Price: {item.UnitPrice}");
