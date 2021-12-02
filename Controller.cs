@@ -25,73 +25,6 @@ namespace NorthwindConsole
                 string choice;
                 do
                 {
-                    /*
-                    if (choice == "1")
-                    {
-                        View.displayCategories(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
-                    }
-                    else if (choice == "2")
-                    {
-                        addCategory();
-                    }
-                    else if (choice == "3")
-                    {
-                        View.promptCategorySelection();
-                        View.displayCategoryAndRelatedProducts(int.Parse(Console.ReadLine()));
-                    }
-                    else if (choice == "4")
-                    {
-                        View.displayAllCategoriesAndRelatedProducts();
-                    }
-                    else if (choice == "5")
-                    {
-                        addProduct();
-                    }else if (choice == "6")
-                    {
-                        editProduct();
-                    }
-                    else if (choice == "7")
-                    {
-                        displayProducts();
-                    }
-                    else if (choice == "8")
-                    {
-                        displayFullSpecificProduct();
-                    }
-                    else if (choice == "9")
-                    {
-                        //editCategory();
-                    }
-                    else if (choice == "10")
-                    {
-                        //deleteProduct();
-                    }
-                    else if (choice == "11")
-                    {
-                        //deleteCategory();
-                    }
-                    */
-                    //View.displayMainMenu();
-                    /*
-                    private static List<string> productOptions = new List<string>()
-        {
-            "1) Add Product",
-            "2) Edit Product",
-            "3) Display Products",
-            "4) Display Full Specific Product",
-            "5) Delete Product"
-        };
-
-        private static List<string> categoryOptions = new List<string>()
-        {
-            "1) Display Categories",
-            "2) Add Category",
-            "3) Display Category and related products",
-            "4) Display all Categories and their related products",
-            "5) Edit Category",
-            "6) Delete Category"
-        };
-                    */
                     View.displayPages();
                     choice = Console.ReadLine();
                     Data.getLogger().Info($"Option {choice} selected");
@@ -117,13 +50,7 @@ namespace NorthwindConsole
             View.displayMainMenuProductOptions();
             string choice = Console.ReadLine();
             Data.getLogger().Info($"Option {choice} selected");
-            /*
-            "1) Add Product",
-            "2) Edit Product",
-            "3) Display Products",
-            "4) Display Full Specific Product",
-            "5) Delete Product"
-            */
+        
             if(choice == "1")
             {
                 addProduct();
@@ -152,14 +79,7 @@ namespace NorthwindConsole
             View.displayMainMenuCategoryOptions();
             string choice = Console.ReadLine();
             Data.getLogger().Info($"Option {choice} selected");
-            /*
-            "1) Display Categories",
-            "2) Add Category",
-            "3) Display Category and related products",
-            "4) Display all Categories and their related products",
-            "5) Edit Category",
-            "6) Delete Category"
-            */
+            
             if(choice == "1")
             {
                 View.displayCategories(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
@@ -171,6 +91,7 @@ namespace NorthwindConsole
             if(choice == "3")
             {
                 View.promptCategorySelection();
+                View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryId));
                 View.displayCategoryAndRelatedProducts(int.Parse(Console.ReadLine()));
             }
             if(choice == "4")
