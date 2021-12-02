@@ -145,14 +145,8 @@ namespace NorthwindConsole
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void displayCategoryAndRelatedProducts(int id)
+        public static void displayCategoryAndRelatedProducts(Category category)
         {     
-            Console.ForegroundColor = ConsoleColor.White;
-            
-            Console.Clear();
-            Data.getLogger().Info($"CategoryId {id} selected");
-
-            Category category = Data.GetNorthwindContext().Categories.Include("Products").FirstOrDefault(c => c.CategoryId == id);
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"{category.CategoryName} - {category.Description}");
             Console.ForegroundColor = ConsoleColor.DarkCyan;

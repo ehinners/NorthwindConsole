@@ -90,9 +90,7 @@ namespace NorthwindConsole
             }
             if(choice == "3")
             {
-                View.promptCategorySelection();
-                View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryId));
-                View.displayCategoryAndRelatedProducts(int.Parse(Console.ReadLine()));
+                displayCategoryAndRelatedProducts();
             }
             if(choice == "4")
             {
@@ -219,6 +217,24 @@ namespace NorthwindConsole
         }
 
         //////////////////////////////////////////////////////////////
+
+        private static void displayCategoryAndRelatedProducts()
+        {
+            View.promptCategorySelection();
+            View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryId));
+            int tempInt;
+            string userInput = Console.ReadLine();
+            if(!Int32.TryParse(userInput, out tempInt))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else
+            {
+                Data.getLogger().Info($"CategoryId {tempInt} selected");
+                Category category = Data.GetNorthwindContext().Categories.Include("Products").FirstOrDefault(c => c.CategoryId == tempInt);
+                View.displayCategoryAndRelatedProducts(category);
+            }
+        }
 
         private static void editProduct()
         {
