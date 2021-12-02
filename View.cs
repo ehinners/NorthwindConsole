@@ -22,9 +22,8 @@ namespace NorthwindConsole
             "7) Display Products",
             "8) Display Full Specific Product",
             "9) Edit Category",
-            "10) Display Full Specific Category",
-            "11) Delete Product",
-            "12) Delete Category"
+            "10) Delete Product",
+            "11) Delete Category"
         };
         
         public static void displayMainMenu()

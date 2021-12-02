@@ -36,9 +36,8 @@ namespace NorthwindConsole
                     "7) Display Products",
                     "8) Display Full Specific Product",
                     "9) Edit Category",
-                    "10) Display Full Specific Category",
-                    "11) Delete Product",
-                    "12) Delete Category"
+                    "10) Delete Product",
+                    "11) Delete Category"
                     */
                     choice = Console.ReadLine();
 
@@ -63,6 +62,9 @@ namespace NorthwindConsole
                     else if (choice == "5")
                     {
                         addProduct();
+                    }else if (choice == "6")
+                    {
+                        //editProduct();
                     }
                     else if (choice == "7")
                     {
@@ -72,7 +74,18 @@ namespace NorthwindConsole
                     {
                         displayFullSpecificProduct();
                     }
-                    
+                    else if (choice == "9")
+                    {
+                        //editCategory();
+                    }
+                    else if (choice == "10")
+                    {
+                        //deleteProduct();
+                    }
+                    else if (choice == "11")
+                    {
+                        //deleteCategory();
+                    }
 
                 } while (choice.ToLower() != escapeValue);
             }
