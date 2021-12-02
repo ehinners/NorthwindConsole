@@ -380,7 +380,17 @@ namespace NorthwindConsole
                     else
                     {
                         Data.getLogger().Info("Validation passed");
-                        // TODO: save product to db
+                        try
+                        {
+                            // Create and save a new Product        
+                            
+                            Model.Data.GetNorthwindContext().AddProduct(product);
+                            Model.Data.getLogger().Info("Product added - {name}", product.ProductName);
+                        }
+                        catch (Exception ex)
+                        {
+                            Model.Data.getLogger().Error(ex.Message);
+                        }
                     }
                 }
                 if (!isValid)
