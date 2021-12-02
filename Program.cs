@@ -18,7 +18,7 @@ namespace NorthwindConsole
 
             “C” (405):
                 [X]1.Add a new product
-                [ ]2.Edit a specified Product
+                [X]2.Edit a specified Product
                 [X]3.Display all Products (ProductName only) - user decides:
                     [X]-all
                     [X]-discontinued

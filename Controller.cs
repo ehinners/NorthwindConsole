@@ -214,7 +214,8 @@ namespace NorthwindConsole
             short tempUnits;
             int selectedProductID;
             IEnumerable<Product> query;
-            Product product;
+            Product product = new Product();
+            Product productCopy;
             if(!Int32.TryParse(userInput, out tempInt))
             {
                 Data.getLogger().Error("Not Valid Int");
@@ -223,13 +224,13 @@ namespace NorthwindConsole
             {
                 selectedProductID = tempInt;
                 query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedProductID);
-                product = query.First();
+                productCopy = query.First();
 
                 bool editing = true;
 
                 while(editing)
                 {
-                    View.editProductOptionsPrompt(product);
+                    View.editProductOptionsPrompt(productCopy);
                     string editProductChoice = Console.ReadLine();
 
                     if(editProductChoice == "1")
@@ -384,26 +385,49 @@ namespace NorthwindConsole
                         editing = false;
                     }
                 }
-                Model.Data.GetNorthwindContext().SaveChanges();
-                Data.getLogger().Info("Product {0} edited and saved", product.ProductName);
+
+                ValidationContext context = new ValidationContext(product, null, null);
+                List<ValidationResult> results = new List<ValidationResult>();
+
+                var isValid = Validator.TryValidateObject(product, context, results, true);
+                if (isValid)
+                {
+                    // check for unique name
+                    if (Data.GetNorthwindContext().Products.Any(p => p.ProductName == product.ProductName))
+                    {
+                        // generate validation error
+                        isValid = false;
+                        results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
+                    }
+                    else
+                    {
+                        Data.getLogger().Info("Validation passed");
+                        try
+                        {
+                            // Update Database      
+                            productCopy = product;
+                            Model.Data.GetNorthwindContext().SaveChanges();
+                            Data.getLogger().Info("Product {0} edited and saved", product.ProductName);
+                        }
+                        catch (Exception ex)
+                        {
+                            Model.Data.getLogger().Error(ex.Message);
+                        }
+                    }
+                }
+                if (!isValid)
+                {
+                    foreach (var result in results)
+                    {
+                        Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+                    }
+                }
+
             }            
         }
 
         private static void addProduct()
-        {
-            /*
-            int ProductId // not null
-            string ProductName  // not null max 40 char
-            int? SupplierId // not null
-            int? CategoryId // not null
-            string QuantityPerUnit // max 20 char
-            decimal? UnitPrice
-            short? UnitsInStock
-            short? UnitsOnOrder
-            short? ReorderLevel
-            bool Discontinued // not null
-            */
-            
+        {          
             Product product = new Product();
             bool noNulls = true;
 
