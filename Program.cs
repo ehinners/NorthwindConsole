@@ -17,7 +17,7 @@ namespace NorthwindConsole
             Using the Northwind database, create a menu driven UI console application that allows maintenance of selected data tables.
 
             “C” (405):
-                [ ]1.Add a new product
+                [X]1.Add a new product
                 [ ]2.Edit a specified Product
                 [X]3.Display all Products (ProductName only) - user decides:
                     [X]-all
@@ -27,7 +27,7 @@ namespace NorthwindConsole
                 [X]4.Display a specific Product (all product fields should be displayed)
                 [ ]5.Use NLog to track user functions
             “B” (445):
-                [ ]1.Add new Category
+                [X]1.Add new Category
                 [ ]2.Edit a specified Category
                 [X]3.Display all Categories (CategoryName and Description)
                 [X]4.Display all Categories and their (not discontinued) product data (CategoryName, ProductName)

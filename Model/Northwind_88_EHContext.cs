@@ -30,6 +30,13 @@ namespace NorthwindConsole.Model
             this.SaveChanges();
         }
 
+        /*
+        public void editCategory(Category category)
+        {
+            this.Categories
+        }
+        */
+
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }

@@ -64,7 +64,7 @@ namespace NorthwindConsole
                         addProduct();
                     }else if (choice == "6")
                     {
-                        //editProduct();
+                        editProduct();
                     }
                     else if (choice == "7")
                     {
@@ -195,6 +195,29 @@ namespace NorthwindConsole
         }
 
         //////////////////////////////////////////////////////////////
+
+        private static void editProduct()
+        {
+            View.viewSpecificProductPrompt();
+            string userInput =  Console.ReadLine();
+            int tempInt;
+            int selectedProductID;
+            IEnumerable<Product> query;
+            Product product;
+            if(!Int32.TryParse(userInput, out tempInt))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifyProductID(tempInt))
+            {
+                selectedProductID = tempInt;
+                query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedProductID);
+                product = query.First();
+                System.Console.WriteLine("Enter A New Product Name");
+                product.ProductName = Console.ReadLine();
+                Model.Data.GetNorthwindContext().SaveChanges();
+            }            
+        }
 
         private static void addProduct()
         {
