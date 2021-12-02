@@ -25,23 +25,7 @@ namespace NorthwindConsole
                 string choice;
                 do
                 {
-                    View.displayMainMenu();
                     /*
-                    "1) Display Categories",
-                    "2) Add Category",
-                    "3) Display Category and related products",
-                    "4) Display all Categories and their related products",
-                    "5) Add Product",
-                    "6) Edit Product",
-                    "7) Display Products",
-                    "8) Display Full Specific Product",
-                    "9) Edit Category",
-                    "10) Delete Product",
-                    "11) Delete Category"
-                    */
-                    choice = Console.ReadLine();
-
-                    Data.getLogger().Info($"Option {choice} selected");
                     if (choice == "1")
                     {
                         View.displayCategories(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
@@ -86,12 +70,122 @@ namespace NorthwindConsole
                     {
                         //deleteCategory();
                     }
+                    */
+                    //View.displayMainMenu();
+                    /*
+                    private static List<string> productOptions = new List<string>()
+        {
+            "1) Add Product",
+            "2) Edit Product",
+            "3) Display Products",
+            "4) Display Full Specific Product",
+            "5) Delete Product"
+        };
 
+        private static List<string> categoryOptions = new List<string>()
+        {
+            "1) Display Categories",
+            "2) Add Category",
+            "3) Display Category and related products",
+            "4) Display all Categories and their related products",
+            "5) Edit Category",
+            "6) Delete Category"
+        };
+                    */
+                    View.displayPages();
+                    choice = Console.ReadLine();
+                    Data.getLogger().Info($"Option {choice} selected");
+                    if(choice == "1" || choice.ToLower().Contains("product"))
+                    {
+                        productMenu();                       
+                    }
+                    if(choice == "2" || choice.ToLower().Contains("categor"))
+                    {
+                        categoryMenu();   
+                    }
+                    
                 } while (choice.ToLower() != escapeValue);
             }
             catch (Exception ex)
             {
                 Data.getLogger().Error(ex.Message);
+            }
+        }
+
+        private static void productMenu()
+        {
+            View.displayMainMenuProductOptions();
+            string choice = Console.ReadLine();
+            Data.getLogger().Info($"Option {choice} selected");
+            /*
+            "1) Add Product",
+            "2) Edit Product",
+            "3) Display Products",
+            "4) Display Full Specific Product",
+            "5) Delete Product"
+            */
+            if(choice == "1")
+            {
+                addProduct();
+            }
+            if(choice == "2")
+            {
+                editProduct();
+            }
+            if(choice == "3")
+            {
+                displayProducts();
+            }
+            if(choice == "4")
+            {
+                displayFullSpecificProduct();
+            }
+            if(choice == "5")
+            {
+                //deleteProduct();
+                System.Console.WriteLine("NOT YET IMPLEMENTED");
+            }
+        }
+
+        private static void categoryMenu()
+        {
+            View.displayMainMenuCategoryOptions();
+            string choice = Console.ReadLine();
+            Data.getLogger().Info($"Option {choice} selected");
+            /*
+            "1) Display Categories",
+            "2) Add Category",
+            "3) Display Category and related products",
+            "4) Display all Categories and their related products",
+            "5) Edit Category",
+            "6) Delete Category"
+            */
+            if(choice == "1")
+            {
+                View.displayCategories(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
+            }
+            if(choice == "2")
+            {
+                addCategory();
+            }
+            if(choice == "3")
+            {
+                View.promptCategorySelection();
+                View.displayCategoryAndRelatedProducts(int.Parse(Console.ReadLine()));
+            }
+            if(choice == "4")
+            {
+                View.displayAllCategoriesAndRelatedProducts();
+            }
+            if(choice == "5")
+            {
+                //editCategory();
+                System.Console.WriteLine("NOT YET IMPLEMENTED");
+            }
+            if(choice == "6")
+            {
+                //deleteCategory();
+                System.Console.WriteLine("NOT YET IMPLEMENTED");
             }
         }
 

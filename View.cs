@@ -25,6 +25,33 @@ namespace NorthwindConsole
             "10) Delete Product",
             "11) Delete Category"
         };
+
+        private static List<string> productOptions = new List<string>()
+        {
+            "1) Add Product",
+            "2) Edit Product",
+            "3) Display Products",
+            "4) Display Full Specific Product",
+            "5) Delete Product"
+        };
+
+        private static List<string> categoryOptions = new List<string>()
+        {
+            "1) Display Categories",
+            "2) Add Category",
+            "3) Display Category and related products",
+            "4) Display all Categories and their related products",
+            "5) Edit Category",
+            "6) Delete Category"
+        };
+
+        public static void displayPages()
+        {
+            System.Console.WriteLine("Please Select:");
+            System.Console.WriteLine("1. Products");
+            System.Console.WriteLine("2. Categories");
+            System.Console.WriteLine("Enter {0} to quit",Controller.getEscapeValue());    
+        }
         
         public static void displayMainMenu()
         {
@@ -34,6 +61,26 @@ namespace NorthwindConsole
                 System.Console.WriteLine(option);
             } 
             System.Console.WriteLine("Enter {0} to quit",Controller.getEscapeValue());           
+        }
+
+        public static void displayMainMenuProductOptions()
+        {
+            System.Console.WriteLine("Enter your selection:");
+            foreach(string option in productOptions)
+            {
+                System.Console.WriteLine(option);
+            } 
+            System.Console.WriteLine("Enter {0} to quit",Controller.getEscapeValue());   
+        }
+
+        public static void displayMainMenuCategoryOptions()
+        {
+            System.Console.WriteLine("Enter your selection:");
+            foreach(string option in categoryOptions)
+            {
+                System.Console.WriteLine(option);
+            } 
+            System.Console.WriteLine("Enter {0} to quit",Controller.getEscapeValue());   
         }
 
         public static void nullCheck()
