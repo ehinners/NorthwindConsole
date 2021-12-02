@@ -418,8 +418,19 @@ namespace NorthwindConsole
                 }
                 else
                 {
-                    Data.getLogger().Info("Validation passed");
-                    // TODO: save category to db
+                    Data.getLogger().Info("Validation passed");                    
+                    
+                    try
+                    {
+                        // Create and save a new Category        
+                        
+                        Model.Data.GetNorthwindContext().AddCategory(category);
+                        Model.Data.getLogger().Info("Category added - {name}", category.CategoryName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Model.Data.getLogger().Error(ex.Message);
+                    }
                 }
             }
             if (!isValid)
