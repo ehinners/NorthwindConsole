@@ -29,11 +29,7 @@ namespace NorthwindConsole.Model
 
         public static Northwind_88_EHContext GetNorthwindContext()
         {
-            if(db==null)
-            {
-                db = new Northwind_88_EHContext();
-            }
-            return db;
+            return new Northwind_88_EHContext();
         }
 
     }

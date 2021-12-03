@@ -245,8 +245,7 @@ namespace NorthwindConsole
             short tempUnits;
             int selectedProductID;
             IEnumerable<Product> query;
-            Product product = new Product();
-            Product productCopy;
+            Product product;
             if(!Int32.TryParse(userInput, out tempInt))
             {
                 Data.getLogger().Error("Not Valid Int");
@@ -254,14 +253,14 @@ namespace NorthwindConsole
             else if(verifyProductID(tempInt))
             {
                 selectedProductID = tempInt;
-                query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedProductID);
-                productCopy = query.First();
-
+                Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
+                query = dbContext.Products.Where(p => p.ProductId == selectedProductID);
+                product = query.First();
                 bool editing = true;
 
                 while(editing)
                 {
-                    View.editProductOptionsPrompt(productCopy);
+                    View.editProductOptionsPrompt(product);
                     string editProductChoice = Console.ReadLine();
 
                     if(editProductChoice == "1")
@@ -276,7 +275,7 @@ namespace NorthwindConsole
                     {
                         // User Provides Supplier ID
                         View.addProdSupplierIdPrompt();
-                        View.displaySupplierSelect(Data.GetNorthwindContext().Suppliers.OrderBy(p => p.SupplierId));
+                        View.displaySupplierSelect(dbContext.Suppliers.OrderBy(p => p.SupplierId));
                         tempInt = 0;
                         userInput =  Console.ReadLine();
                         if(!Int32.TryParse(userInput, out tempInt))
@@ -298,7 +297,7 @@ namespace NorthwindConsole
                     {
                         // User Provides Category ID
                         View.addProdCategoryIdPrompt();
-                        View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryName));
+                        View.displayCategorySelect(dbContext.Categories.OrderBy(p => p.CategoryName));
                         tempInt = 0;
                         userInput =  Console.ReadLine();
                         if(!Int32.TryParse(userInput, out tempInt))
@@ -424,7 +423,8 @@ namespace NorthwindConsole
                 if (isValid)
                 {
                     // check for unique name
-                    if (Data.GetNorthwindContext().Products.Any(p => p.ProductName == product.ProductName))
+                    
+                    if(dbContext.Products.Any(p => p.ProductName == product.ProductName && p.ProductId != product.ProductId))
                     {
                         // generate validation error
                         isValid = false;
@@ -436,8 +436,7 @@ namespace NorthwindConsole
                         try
                         {
                             // Update Database      
-                            productCopy = product;
-                            Model.Data.GetNorthwindContext().SaveChanges();
+                            dbContext.SaveChanges();
                             Data.getLogger().Info("Product {0} edited and saved", product.ProductName);
                         }
                         catch (Exception ex)
@@ -448,6 +447,7 @@ namespace NorthwindConsole
                 }
                 if (!isValid)
                 {
+                    Data.getLogger().Error("Item Not Saved");
                     foreach (var result in results)
                     {
                         Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
