@@ -308,7 +308,9 @@ namespace NorthwindConsole
                 System.Console.WriteLine($"Product ID: {item.ProductId}");
                 System.Console.WriteLine($"Product Name: {item.ProductName}");
                 System.Console.WriteLine($"CategoryID: {item.CategoryId}");
+                System.Console.WriteLine($"Category Name: {(Data.GetNorthwindContext().Categories.Where(c => c.CategoryId == item.CategoryId)).First().CategoryName }");
                 System.Console.WriteLine($"SupplierID: {item.SupplierId}");
+                System.Console.WriteLine($"Supplier Name: {(Data.GetNorthwindContext().Suppliers.Where(s => s.SupplierId == item.SupplierId)).First().CompanyName }");
                 System.Console.WriteLine($"Quantity Per Unit: {item.QuantityPerUnit}");
                 System.Console.WriteLine($"Unit Price: {item.UnitPrice}");
                 System.Console.WriteLine($"Units In Stock: {item.UnitsInStock}");

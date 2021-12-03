@@ -48,8 +48,6 @@ namespace NorthwindConsole
             */
 
             // TODO: MAKE ALL ''SELECTED'' FUNCTIONS THE SAME
-            // TODO: FIX PRODUCT EDITING
-            // TODO: DISPLAY FULL SUPPLIER AND CATEGORY WHEN DISPLAYING FULL PRODUCT INFO
             Console.Clear();
             Console.WriteLine("");
 
