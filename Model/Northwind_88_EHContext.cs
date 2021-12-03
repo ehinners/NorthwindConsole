@@ -30,6 +30,12 @@ namespace NorthwindConsole.Model
             this.SaveChanges();
         }
 
+        public void DeleteProduct(Product product)
+        {
+            this.Products.Remove(product);
+            this.SaveChanges();
+        }
+
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }

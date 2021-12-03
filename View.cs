@@ -210,6 +210,24 @@ namespace NorthwindConsole
         // -----------------------------------------PRODUCTS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // DELETING A PRODUCT
+
+        public static void deleteProdPrompt()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            System.Console.WriteLine("Please Select The ID Of The Product To Be ");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.WriteLine("DELETED:");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void deleteProdConfirmation(Product product)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.WriteLine("Are you SURE you want to DELETE Product {0}? (Y/N)", product.ProductName);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         // EDITING A PRODUCT
 
         public static void editProductSelectionPrompt()

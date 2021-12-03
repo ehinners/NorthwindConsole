@@ -73,8 +73,7 @@ namespace NorthwindConsole
             }
             if(choice == "5")
             {
-                //deleteProduct();
-                System.Console.WriteLine("NOT YET IMPLEMENTED");
+                deleteProduct();
             }
         }
 
@@ -106,14 +105,46 @@ namespace NorthwindConsole
             }
             if(choice == "6")
             {
-                //deleteCategory();
-                System.Console.WriteLine("NOT YET IMPLEMENTED");
+                deleteCategory();
             }
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // -----------------------------------------PRODUCTS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private static void deleteProduct()
+        {
+            View.deleteProdPrompt();
+            View.displayProductSelect(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
+            int userChoice = 0;
+            string userInput =  Console.ReadLine();
+            if(!Int32.TryParse(userInput, out userChoice))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifyProductID(userChoice))
+            {     
+                var query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == userChoice);
+                Product product = query.First();
+                Data.getLogger().Info("Product {0} Selected", product.ProductName);
+                View.deleteProdConfirmation(product);
+
+                userInput = Console.ReadLine();
+                string yesOrNo = parseBool(userInput);
+                if(yesOrNo == "true")
+                {
+                    Data.getLogger().Info("Product {0} Deleted", product.ProductName);
+                    //Data.GetNorthwindContext().Remove(product);
+                    Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
+                    dbContext.DeleteProduct(product);
+                }
+                else
+                {
+                    Data.getLogger().Info("Product {0} Deletion Aborted", product.ProductName);
+                }
+            }
+        }
 
         private static void displayFullSpecificProduct()
         {
@@ -128,7 +159,9 @@ namespace NorthwindConsole
             }
             else if(verifyProductID(userChoice))
             {     
-                View.displaySpecificProduct(Data.GetNorthwindContext().Products.Where(p => p.ProductId == userChoice));
+                var query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == userChoice);
+                Data.getLogger().Info("Product {0} Selected", query.First().ProductName);
+                View.displaySpecificProduct(query);
             }
         }
 
@@ -644,6 +677,11 @@ namespace NorthwindConsole
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // ----------------------------------------CATEGORIES---------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private static void deleteCategory()
+        {
+            System.Console.WriteLine("Not Yet Implemented");
+        }
 
         private static void editCategory()
         {
