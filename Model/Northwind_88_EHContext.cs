@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
+using NLog.Web;
 
 #nullable disable
 
@@ -21,6 +23,17 @@ namespace NorthwindConsole.Model
         public void AddCategory(Category category)
         {
             this.Categories.Add(category);
+            this.SaveChanges();
+        }
+
+        public void DeleteCategory(Category category)
+        {
+            foreach(var item in this.Products.Where(p => p.CategoryId == category.CategoryId))
+            {
+                Data.getLogger().Info("Product Deleted - {0}",item.ProductName);
+                this.Products.Remove(item);
+            }
+            this.Categories.Remove(category);
             this.SaveChanges();
         }
 

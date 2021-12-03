@@ -125,6 +125,27 @@ namespace NorthwindConsole
         // ----------------------------------------CATEGORIES---------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
+        public static void deleteCatePrompt()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            System.Console.WriteLine("Please Select The ID Of The Category To Be ");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.WriteLine("DELETED:");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void deleteCateConfirmation(Category category)
+        {
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Black;
+            System.Console.WriteLine("This Will Delete {0} Orphan Items", Data.GetNorthwindContext().Products.Where(p=>p.CategoryId == category.CategoryId).Count());
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.BackgroundColor = ConsoleColor.Black;
+            System.Console.WriteLine("Are you SURE you want to DELETE Category {0}? (Y/N)", category.CategoryName);
+            
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         public static void editCategorySelectionPrompt()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;

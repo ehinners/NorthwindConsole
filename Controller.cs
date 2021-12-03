@@ -680,7 +680,34 @@ namespace NorthwindConsole
 
         private static void deleteCategory()
         {
-            System.Console.WriteLine("Not Yet Implemented");
+            View.deleteCatePrompt();
+            View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(c => c.CategoryId));
+            int userChoice = 0;
+            string userInput =  Console.ReadLine();
+            if(!Int32.TryParse(userInput, out userChoice))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifyProductID(userChoice))
+            {     
+                var query = Data.GetNorthwindContext().Categories.Where(c => c.CategoryId == userChoice);
+                Category category = query.First();
+                Data.getLogger().Info("Category {0} Selected", category.CategoryName);
+                View.deleteCateConfirmation(category);
+
+                userInput = Console.ReadLine();
+                string yesOrNo = parseBool(userInput);
+                if(yesOrNo == "true")
+                {
+                    Data.getLogger().Info("Category {0} Deleted", category.CategoryName);                    
+                    Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
+                    dbContext.DeleteCategory(category);
+                }
+                else
+                {
+                    Data.getLogger().Info("Category {0} Deletion Aborted", category.CategoryName);
+                }
+            }
         }
 
         private static void editCategory()
