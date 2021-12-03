@@ -193,7 +193,10 @@ namespace NorthwindConsole
 
             foreach (Product p in category.Products)
             {
-                Console.WriteLine(p.ProductName);
+                if(!p.Discontinued)
+                {
+                    Console.WriteLine(p.ProductName);
+                }                
             }
             Console.ForegroundColor = ConsoleColor.White;
         }
@@ -207,7 +210,10 @@ namespace NorthwindConsole
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 foreach (Product p in item.Products)
                 {
-                    Console.WriteLine($"\t{p.ProductName}");
+                    if(!p.Discontinued)
+                    {
+                        Console.WriteLine($"\t{p.ProductName}");
+                    }                    
                 }
                 Console.ForegroundColor = ConsoleColor.White;
             }

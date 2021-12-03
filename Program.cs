@@ -25,7 +25,7 @@ namespace NorthwindConsole
                     [X]-active (not discontinued)
                 [X]Discontinued products should be distinguished from active products. (Change Text Color?)
                 [X]4.Display a specific Product (all product fields should be displayed)
-                [ ]5.Use NLog to track user functions
+                [X]5.Use NLog to track user functions
             “B” (445):
                 [X]1.Add new Category
                 [X]2.Edit a specified Category
