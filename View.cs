@@ -125,6 +125,25 @@ namespace NorthwindConsole
         // ----------------------------------------CATEGORIES---------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
+        public static void editCategorySelectionPrompt()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("Select the category to edit:");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void editCategoryOptionsPrompt(Category category)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            System.Console.WriteLine("Please Enter The Number Of Which Property To Be Edited:");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            System.Console.WriteLine("1 - Category Name ({0})", category.CategoryName);
+            System.Console.WriteLine("2 - Category Description({0})", category.Description);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.WriteLine("Or Enter '{0}' to finish editing", Controller.getEscapeValue());
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
 
         public static void displayCategories(IEnumerable<Category> query)
         {

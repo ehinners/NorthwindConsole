@@ -28,7 +28,7 @@ namespace NorthwindConsole
                 [ ]5.Use NLog to track user functions
             “B” (445):
                 [X]1.Add new Category
-                [ ]2.Edit a specified Category
+                [X]2.Edit a specified Category
                 [X]3.Display all Categories (CategoryName and Description)
                 [X]4.Display all Categories and their (not discontinued) product data (CategoryName, ProductName)
                 [X]5.Display a specific Category and its active product data (CategoryName, ProductName)

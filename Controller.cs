@@ -45,6 +45,10 @@ namespace NorthwindConsole
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // ------------------------------------------MENUS------------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
         private static void productMenu()
         {
             View.displayMainMenuProductOptions();
@@ -98,8 +102,7 @@ namespace NorthwindConsole
             }
             if(choice == "5")
             {
-                //editCategory();
-                System.Console.WriteLine("NOT YET IMPLEMENTED");
+                editCategory();
             }
             if(choice == "6")
             {
@@ -107,6 +110,10 @@ namespace NorthwindConsole
                 System.Console.WriteLine("NOT YET IMPLEMENTED");
             }
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // -----------------------------------------PRODUCTS----------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
 
         private static void displayFullSpecificProduct()
         {
@@ -144,96 +151,6 @@ namespace NorthwindConsole
                 {
                     View.displayDiscontinuedProducts(Data.GetNorthwindContext().Products.Where(p => p.Discontinued == true));
                 }
-        }
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        // ---------------------------------------VALIDATORS----------------------------------------- //
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private static bool verifySupplierID(int selectedID) //TODO: Make these Validation Result Methods
-        {
-            bool verified = false;
-            var results = Data.GetNorthwindContext().Suppliers.Where(p => p.SupplierId == selectedID);
-            if(results.Count()!=0)
-            {
-                verified = true;
-            }
-            return verified;
-        }
-
-        private static bool verifyProductID(int selectedID) //TODO: Make these Validation Result Methods
-        {
-            bool verified = false;
-            var results = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedID);
-            if(results.Count()!=0)
-            {
-                verified = true;
-            }
-            else{
-                Model.Data.getLogger().Error("Product Not Found");
-            }
-            return verified;
-        }
-
-        private static bool verifyCategoryID(int selectedID) //TODO: Make these Validation Result Methods
-        {
-            bool verified = false;
-            var results = Data.GetNorthwindContext().Categories.Where(p => p.CategoryId == selectedID);
-            if(results.Count()!=0)
-            {
-                verified = true;
-            }
-            else{
-                Model.Data.getLogger().Error("Category Not Found");
-            }
-            return verified;
-        }
-
-        private static string parseBool(string input)
-        {
-            string result;
-            if(input.Length >= 1)
-            {
-                if(input.ToLower()[0]=='y')
-                {
-                    result = "true";
-                }
-                else if(input.ToLower()[0]=='n')
-                {
-                    result = "false";
-                }
-                else
-                {
-                    result = "neither";
-                    Model.Data.getLogger().Error("Not Valid Selection");
-                }
-            }
-            else
-            {
-                result = "neither";
-                Model.Data.getLogger().Error("Null Entry Not Accepted");
-            }           
-            
-            return result;
-        }
-
-        //////////////////////////////////////////////////////////////
-
-        private static void displayCategoryAndRelatedProducts()
-        {
-            View.promptCategorySelection();
-            View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryId));
-            int tempInt;
-            string userInput = Console.ReadLine();
-            if(!Int32.TryParse(userInput, out tempInt))
-            {
-                Data.getLogger().Error("Not Valid Int");
-            }
-            else
-            {
-                Data.getLogger().Info($"CategoryId {tempInt} selected");
-                Category category = Data.GetNorthwindContext().Categories.Include("Products").FirstOrDefault(c => c.CategoryId == tempInt);
-                View.displayCategoryAndRelatedProducts(category);
-            }
         }
 
         private static void editProduct()
@@ -650,6 +567,189 @@ namespace NorthwindConsole
                 }
             }
                
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // ---------------------------------------VALIDATORS----------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private static bool verifySupplierID(int selectedID) //TODO: Make these Validation Result Methods
+        {
+            bool verified = false;
+            var results = Data.GetNorthwindContext().Suppliers.Where(p => p.SupplierId == selectedID);
+            if(results.Count()!=0)
+            {
+                verified = true;
+            }
+            return verified;
+        }
+
+        private static bool verifyProductID(int selectedID) //TODO: Make these Validation Result Methods
+        {
+            bool verified = false;
+            var results = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedID);
+            if(results.Count()!=0)
+            {
+                verified = true;
+            }
+            else{
+                Model.Data.getLogger().Error("Product Not Found");
+            }
+            return verified;
+        }
+
+        private static bool verifyCategoryID(int selectedID) //TODO: Make these Validation Result Methods
+        {
+            bool verified = false;
+            var results = Data.GetNorthwindContext().Categories.Where(p => p.CategoryId == selectedID);
+            if(results.Count()!=0)
+            {
+                verified = true;
+            }
+            else{
+                Model.Data.getLogger().Error("Category Not Found");
+            }
+            return verified;
+        }
+
+        private static string parseBool(string input)
+        {
+            string result;
+            if(input.Length >= 1)
+            {
+                if(input.ToLower()[0]=='y')
+                {
+                    result = "true";
+                }
+                else if(input.ToLower()[0]=='n')
+                {
+                    result = "false";
+                }
+                else
+                {
+                    result = "neither";
+                    Model.Data.getLogger().Error("Not Valid Selection");
+                }
+            }
+            else
+            {
+                result = "neither";
+                Model.Data.getLogger().Error("Null Entry Not Accepted");
+            }           
+            
+            return result;
+        }
+
+       
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // ----------------------------------------CATEGORIES---------------------------------------- //
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private static void editCategory()
+        {
+            View.editCategorySelectionPrompt();
+            View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(c => c.CategoryId));
+            string userInput =  Console.ReadLine();
+            int selectedCategoryID;
+            int tempInt;
+            IEnumerable<Category> query;
+            Category category;
+            if(!Int32.TryParse(userInput, out tempInt))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else if(verifyProductID(tempInt))
+            {
+                selectedCategoryID = tempInt;
+                Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
+                query = dbContext.Categories.Where(c => c.CategoryId == selectedCategoryID);
+                category = query.First();
+                bool editing = true;
+
+                while(editing)
+                {
+                    View.editCategoryOptionsPrompt(category);
+                    string editCategoryChoice = Console.ReadLine();
+
+                    if(editCategoryChoice == "1")
+                    {
+                        // User Provides New Name
+                        View.addCategoryNamePrompt();
+                        category.CategoryName = Console.ReadLine();
+                        Data.getLogger().Info("Category {0} product name changed", category.CategoryName);
+                    }
+
+                    if(editCategoryChoice == "2")
+                    {
+                        // User Provides Description
+                        View.addCategoryDescriptionPrompt();
+                        category.Description = Console.ReadLine();
+                        Data.getLogger().Info("Category {0} Description changed", category.Description);
+                    }
+
+                    if(editCategoryChoice.ToLower() == "q")
+                    {
+                        editing = false;
+                    }
+                }
+
+                ValidationContext context = new ValidationContext(category, null, null);
+                List<ValidationResult> results = new List<ValidationResult>();
+
+                var isValid = Validator.TryValidateObject(category, context, results, true);
+                if (isValid)
+                {
+                    // check for unique name
+                    
+                    if(dbContext.Categories.Any(c => c.CategoryName == category.CategoryName && c.CategoryId != category.CategoryId))
+                    {
+                        // generate validation error
+                        isValid = false;
+                        results.Add(new ValidationResult("Name exists", new string[] { "CategoryName" }));
+                    }
+                    else
+                    {
+                        Data.getLogger().Info("Validation passed");
+                        try
+                        {
+                            // Update Database      
+                            dbContext.SaveChanges();
+                            Data.getLogger().Info("Category {0} edited and saved", category.CategoryName);
+                        }
+                        catch (Exception ex)
+                        {
+                            Model.Data.getLogger().Error(ex.Message);
+                        }
+                    }
+                }
+                if (!isValid)
+                {
+                    Data.getLogger().Error("Item Not Saved");
+                    foreach (var result in results)
+                    {
+                        Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+                    }
+                }
+
+            }            
+        }
+
+        private static void displayCategoryAndRelatedProducts()
+        {
+            View.promptCategorySelection();
+            View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryId));
+            int tempInt;
+            string userInput = Console.ReadLine();
+            if(!Int32.TryParse(userInput, out tempInt))
+            {
+                Data.getLogger().Error("Not Valid Int");
+            }
+            else
+            {
+                Data.getLogger().Info($"CategoryId {tempInt} selected");
+                Category category = Data.GetNorthwindContext().Categories.Include("Products").FirstOrDefault(c => c.CategoryId == tempInt);
+                View.displayCategoryAndRelatedProducts(category);
+            }
         }
 
         private static void addCategory()
