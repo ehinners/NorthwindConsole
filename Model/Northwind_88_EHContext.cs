@@ -28,9 +28,11 @@ namespace NorthwindConsole.Model
 
         public void DeleteCategory(Category category)
         {
+            Northwind_88_EHContext nested = new Northwind_88_EHContext();
             foreach(var item in this.Products.Where(p => p.CategoryId == category.CategoryId))
             {
                 Data.getLogger().Info("Product Deleted - {0}",item.ProductName);
+                this.OrderDetails.RemoveRange(nested.OrderDetails.Where(o => o.ProductId == item.ProductId));
                 this.Products.Remove(item);
             }
             this.Categories.Remove(category);
