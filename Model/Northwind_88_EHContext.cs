@@ -45,6 +45,11 @@ namespace NorthwindConsole.Model
 
         public void DeleteProduct(Product product)
         {
+            foreach(var item in this.OrderDetails.Where(o => o.ProductId == product.ProductId))
+            {
+                Data.getLogger().Info("Order Details Deleted Order ID: {0}", item.OrderId);
+                this.OrderDetails.Remove(item);
+            }
             this.Products.Remove(product);
             this.SaveChanges();
         }

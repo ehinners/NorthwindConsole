@@ -244,9 +244,14 @@ namespace NorthwindConsole
 
         public static void deleteProdConfirmation(Product product)
         {
+
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Black;
+            System.Console.WriteLine("This Will Create {0} Orphan Items", Data.GetNorthwindContext().OrderDetails.Where(o=>o.ProductId == product.ProductId).Count());
             Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.BackgroundColor = ConsoleColor.Black;
             System.Console.WriteLine("Are you SURE you want to DELETE Product {0}? (Y/N)", product.ProductName);
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;            
         }
 
         // EDITING A PRODUCT
