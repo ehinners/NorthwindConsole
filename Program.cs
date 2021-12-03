@@ -33,9 +33,16 @@ namespace NorthwindConsole
                 [X]4.Display all Categories and their (not discontinued) product data (CategoryName, ProductName)
                 [X]5.Display a specific Category and its active product data (CategoryName, ProductName)
             “A” (475):
-                [ ]1.Delete a specified existing Product  (account for Orphans)
-                [ ]2.Delete a specified existing Category (account for Orphans)
-                [ ]3.Use data annotations and handle ALL user errors gracefully & log all errors using NLog
+                [X]1.Delete a specified existing Product  (account for Orphans)
+                [X]2.Delete a specified existing Category (account for Orphans)
+
+                select ProductId, COUNT(ProductId) as numTimes from OrderDetails Group By ProductId Order By numTimes
+
+                Select * From Orders Where OrderID = 10420
+
+                Select * From OrderDetails Where OrderID = 10420
+
+                [X]3.Use data annotations and handle ALL user errors gracefully & log all errors using NLog
             500 points:
                 [ ]*.your application must do something exceptional, something we have not covered in class.
 
@@ -46,8 +53,7 @@ namespace NorthwindConsole
             Any feature not demonstrated in the video will not be applied to the project grade.
 
             */
-
-            // TODO: MAKE ALL ''SELECTED'' FUNCTIONS THE SAME
+            // TODO: ACCOUNT FOR ORDERDETAIL ORPHANS WHEN DELETING ORPHANS FROM DELETING A CATEGORY
             Console.Clear();
             Console.WriteLine("");
 

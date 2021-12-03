@@ -30,14 +30,14 @@ namespace NorthwindConsole
                     Data.getLogger().Info($"Option {choice} selected");
                     if(choice == "1" || choice.ToLower().Contains("product"))
                     {
-                        productMenu();                       
+                        productMenu();  // sub menu for products                     
                     }
                     if(choice == "2" || choice.ToLower().Contains("categor"))
                     {
-                        categoryMenu();   
+                        categoryMenu();  // sub menu for categories
                     }
                     
-                } while (choice.ToLower() != escapeValue);
+                } while (choice.ToLower() != escapeValue); // ends program
             }
             catch (Exception ex)
             {
@@ -53,7 +53,7 @@ namespace NorthwindConsole
         {
             View.displayMainMenuProductOptions();
             string choice = Console.ReadLine();
-            Data.getLogger().Info($"Option {choice} selected");
+            Data.getLogger().Info($"Products Menu - {choice} selected");
         
             if(choice == "1")
             {
@@ -81,7 +81,7 @@ namespace NorthwindConsole
         {
             View.displayMainMenuCategoryOptions();
             string choice = Console.ReadLine();
-            Data.getLogger().Info($"Option {choice} selected");
+            Data.getLogger().Info($"Categories Menu -  {choice} selected");
             
             if(choice == "1")
             {
@@ -115,19 +115,24 @@ namespace NorthwindConsole
 
         private static void deleteProduct()
         {
+            // User is asked to select a product to delete
             View.deleteProdPrompt();
+            // User is given a list of products to delete
             View.displayProductSelect(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
             int userChoice = 0;
             string userInput =  Console.ReadLine();
+            // User should enter the id of the product they wish to delete
             if(!Int32.TryParse(userInput, out userChoice))
             {
                 Data.getLogger().Error("Not Valid Int");
             }
-            else if(verifyProductID(userChoice))
+            else if(verifyProductID(userChoice))// existance of product with chosen product id is verified
             {     
+                // product is the product with the selected productId
                 var query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == userChoice);
                 Product product = query.First();
                 Data.getLogger().Info("Product {0} Selected", product.ProductName);
+                // User is given option to choose NOT to delete (includes warning about number of orphans)
                 View.deleteProdConfirmation(product);
 
                 userInput = Console.ReadLine();
@@ -138,11 +143,16 @@ namespace NorthwindConsole
                     //Data.GetNorthwindContext().Remove(product);
                     Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
                     dbContext.DeleteProduct(product);
+                    // delete product handles orphans
                 }
                 else
                 {
                     Data.getLogger().Info("Product {0} Deletion Aborted", product.ProductName);
                 }
+            }
+            else
+            {
+                Data.getLogger().Error("Product Not Found");
             }
         }
 
@@ -150,6 +160,7 @@ namespace NorthwindConsole
         {
             int userChoice = 0;
             View.viewSpecificProductPrompt();
+            // user is given list of products to choose an id from
             View.displayProductSelect(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
 
             string userInput =  Console.ReadLine();
@@ -157,11 +168,15 @@ namespace NorthwindConsole
             {
                 Data.getLogger().Error("Not Valid Int");
             }
-            else if(verifyProductID(userChoice))
+            else if(verifyProductID(userChoice))// verifies a product exists with selected productID
             {     
                 var query = Data.GetNorthwindContext().Products.Where(p => p.ProductId == userChoice);
                 Data.getLogger().Info("Product {0} Selected", query.First().ProductName);
                 View.displaySpecificProduct(query);
+            }
+            else
+            {
+                Data.getLogger().Error("Product Not Found");
             }
         }
 
@@ -170,7 +185,10 @@ namespace NorthwindConsole
             View.productsViewPrompt();
 
             string choice = Console.ReadLine();
-                Data.getLogger().Info($"Option {choice} selected");
+                Data.getLogger().Info($"Display Products - {choice} selected");
+
+                // user is given an option of which set of products to display
+                // all, active (not discontinued), or ONLY discontinued
 
                 if(choice == "1")
                 {
@@ -188,7 +206,12 @@ namespace NorthwindConsole
 
         private static void editProduct()
         {
+            // user may change properties of a product directly, once they've indicated they are done
+            // changing values, the resulting product is verified, and only if it passes verification again
+            // is it saved to the database, otherwise the context is refreshed and changes are lost
+
             View.editProductSelectionPrompt();
+            // user is given list of products to select from, including their product id
             View.displayProductSelect(Data.GetNorthwindContext().Products.OrderBy(p => p.ProductId));
             string userInput =  Console.ReadLine();
             int tempInt;
@@ -200,19 +223,21 @@ namespace NorthwindConsole
             {
                 Data.getLogger().Error("Not Valid Int");
             }
-            else if(verifyProductID(tempInt))
+            else if(verifyProductID(tempInt))// product existance is verified with selected productID
             {
                 selectedProductID = tempInt;
                 Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
                 query = dbContext.Products.Where(p => p.ProductId == selectedProductID);
-                product = query.First();
-                bool editing = true;
-
+                product = query.First(); // product is the selected product from list with selected productID
+                Data.getLogger().Info("Edit Product - {0} Selected", product.ProductName);
+                bool editing = true; 
+                // allows the user to make several edits in a row, only a few, redundant edits, or none at all
                 while(editing)
                 {
                     View.editProductOptionsPrompt(product);
                     string editProductChoice = Console.ReadLine();
-
+                    // user is given a list of all mutable product properties in which they may select one to edit
+                    Data.getLogger().Info("Edit Product Choice - {0}", editProductChoice);
                     if(editProductChoice == "1")
                     {
                         // User Provides New Name
@@ -226,21 +251,19 @@ namespace NorthwindConsole
                         // User Provides Supplier ID
                         View.addProdSupplierIdPrompt();
                         View.displaySupplierSelect(dbContext.Suppliers.OrderBy(p => p.SupplierId));
+                        // user is given a list of all potential/existing suppliers (supplier name + supplierID)
                         tempInt = 0;
                         userInput =  Console.ReadLine();
                         if(!Int32.TryParse(userInput, out tempInt))
                         {
                             Data.getLogger().Error("Not Valid Int");
                         }
-                        else if(verifySupplierID(tempInt))
-                        {
-                            product.SupplierId = tempInt;
-                            Data.getLogger().Info("Product {0} Supplier ID changed", product.ProductName);
-                        }     
                         else
                         {
-                            Data.getLogger().Error("Supplier Not Found");
-                        }                            
+                            product.SupplierId = tempInt;
+                            Data.getLogger().Info("Supplier ID Changed");
+                        }
+                                             
                     }
 
                     if(editProductChoice == "3")
@@ -248,20 +271,17 @@ namespace NorthwindConsole
                         // User Provides Category ID
                         View.addProdCategoryIdPrompt();
                         View.displayCategorySelect(dbContext.Categories.OrderBy(p => p.CategoryName));
+                        // user is given full list of existing categories (to create a new one, that's a different menu)
                         tempInt = 0;
                         userInput =  Console.ReadLine();
                         if(!Int32.TryParse(userInput, out tempInt))
                         {
                             Data.getLogger().Error("Not Valid Int");
                         }
-                        else if(verifyCategoryID(tempInt))
-                        {
-                            product.CategoryId = tempInt;
-                            Data.getLogger().Info("Product {0} Category ID changed", product.ProductName);
-                        }     
                         else
                         {
-                            Data.getLogger().Error("Category Not Found");
+                            product.CategoryId = tempInt;
+                            Data.getLogger().Info("Category ID changed");
                         }
                         
                     }
@@ -370,32 +390,45 @@ namespace NorthwindConsole
                 List<ValidationResult> results = new List<ValidationResult>();
 
                 var isValid = Validator.TryValidateObject(product, context, results, true);
-                if (isValid)
+                
+                // check for unique name, taking into account that the item already exists, 
+                // so it ignores products with the same name AND id
+                
+                if(dbContext.Products.Any(p => p.ProductName == product.ProductName && p.ProductId != product.ProductId))
                 {
-                    // check for unique name
-                    
-                    if(dbContext.Products.Any(p => p.ProductName == product.ProductName && p.ProductId != product.ProductId))
-                    {
-                        // generate validation error
-                        isValid = false;
-                        results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
-                    }
-                    else
-                    {
-                        Data.getLogger().Info("Validation passed");
-                        try
-                        {
-                            // Update Database      
-                            dbContext.SaveChanges();
-                            Data.getLogger().Info("Product {0} edited and saved", product.ProductName);
-                        }
-                        catch (Exception ex)
-                        {
-                            Model.Data.getLogger().Error(ex.Message);
-                        }
-                    }
+                    // generate validation error
+                    isValid = false;
+                    results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
+                } 
+                if(!verifyCategoryID((int)product.CategoryId))
+                {
+                    // generate validation error
+                    isValid = false;
+                    results.Add(new ValidationResult("Category Does Not exist", new string[] { "ProductName" }));
                 }
-                if (!isValid)
+                if(!verifySupplierID((int)product.SupplierId))
+                {
+                    // generate validation error
+                    isValid = false;
+                    results.Add(new ValidationResult("Supplier Does Not exist", new string[] { "ProductName" }));
+                }
+                
+
+                if(isValid)
+                {
+                    Data.getLogger().Info("Validation passed");
+                    try
+                    {
+                        // Update Database      
+                        dbContext.SaveChanges();
+                        Data.getLogger().Info("Product {0} edited and saved", product.ProductName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Model.Data.getLogger().Error(ex.Message);
+                        }
+                }
+                else
                 {
                     Data.getLogger().Error("Item Not Saved");
                     foreach (var result in results)
@@ -404,13 +437,20 @@ namespace NorthwindConsole
                     }
                 }
 
-            }            
+            }  
+            else{
+                Data.getLogger().Error("Product Not Found");
+            }          
         }
 
         private static void addProduct()
         {          
+            // User is given a set of prompts to propagate fields for a new product
+            // User is given option to allow most fields to be NULL, database is configured to allow some
+            // overrides others with defaults
             Product product = new Product();
-            bool noNulls = true;
+            bool noNulls = true; // Any unvalidated or null values entered by the user flags this as false
+            // A false value will warn the user before the product is saved, and allows them to cancel
 
             // User Provides New Name
             View.addProdProductNamePrompt();
@@ -426,15 +466,11 @@ namespace NorthwindConsole
                 Data.getLogger().Error("Not Valid Int");
                 noNulls = false;
             }
-            else if(verifySupplierID(tempInt))
-            {
-                product.SupplierId = tempInt;
-            }     
             else
             {
-                Data.getLogger().Error("Supplier Not Found");
-                noNulls = false;
-            }       
+                 product.SupplierId = tempInt;
+            }
+             
 
             // User Provides Category ID
             View.addProdCategoryIdPrompt();
@@ -446,15 +482,11 @@ namespace NorthwindConsole
                 Data.getLogger().Error("Not Valid Int");
                 noNulls = false;
             }
-            else if(verifyCategoryID(tempInt))
-            {
-                product.CategoryId = tempInt;
-            }     
             else
             {
-                Data.getLogger().Error("Category Not Found");
-                noNulls = false;
+                 product.CategoryId = tempInt;
             }
+            
 
             // User Provides Quantity Per Unit
             View.addProdQuantityPerUnitPrompt();
@@ -538,6 +570,9 @@ namespace NorthwindConsole
                 noNulls = false;
             }
             bool permissed = false;
+            // If the user failed any validations, or provided a null value
+            // They are requred to confirm their addition as an extra step
+            // And are warned about the object having null values
             if(!noNulls)
             {
                 View.nullCheck();
@@ -559,40 +594,53 @@ namespace NorthwindConsole
             else
             {
                 permissed = true;
-            }
+            } // if the user allowed null values, or all input was validated, final validation can proceed
             if(permissed)
             {
                 ValidationContext context = new ValidationContext(product, null, null);
                 List<ValidationResult> results = new List<ValidationResult>();
 
                 var isValid = Validator.TryValidateObject(product, context, results, true);
-                if (isValid)
+                
+                // check for unique name
+                if (Data.GetNorthwindContext().Products.Any(p => p.ProductName == product.ProductName))
                 {
-                    // check for unique name
-                    if (Data.GetNorthwindContext().Products.Any(p => p.ProductName == product.ProductName))
+                    // generate validation error
+                    isValid = false;
+                    results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
+                }
+                if(!verifyCategoryID((int)product.CategoryId))
+                {
+                    // generate validation error
+                    isValid = false;
+                    results.Add(new ValidationResult("Category Does Not exist", new string[] { "ProductName" }));
+                }
+                if(!verifySupplierID((int)product.SupplierId))
+                {
+                    // generate validation error
+                    isValid = false;
+                    results.Add(new ValidationResult("Supplier Does Not exist", new string[] { "ProductName" }));
+                }
+                
+
+                if(isValid)
+                {
+                     Data.getLogger().Info("Validation passed");
+                    try
                     {
-                        // generate validation error
-                        isValid = false;
-                        results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
+                        // Create and save a new Product        
+                        
+                        Model.Data.GetNorthwindContext().AddProduct(product);
+                        Model.Data.getLogger().Info("Product added - {name}", product.ProductName);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Data.getLogger().Info("Validation passed");
-                        try
-                        {
-                            // Create and save a new Product        
-                            
-                            Model.Data.GetNorthwindContext().AddProduct(product);
-                            Model.Data.getLogger().Info("Product added - {name}", product.ProductName);
-                        }
-                        catch (Exception ex)
-                        {
-                            Model.Data.getLogger().Error(ex.Message);
-                        }
+                        Model.Data.getLogger().Error(ex.Message);
                     }
                 }
-                if (!isValid)
+                else
                 {
+                    Data.getLogger().Error("Item Not Saved");
                     foreach (var result in results)
                     {
                         Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
@@ -605,7 +653,10 @@ namespace NorthwindConsole
         // ---------------------------------------VALIDATORS----------------------------------------- //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private static bool verifySupplierID(int selectedID) //TODO: Make these Validation Result Methods
+        // given an id, these will return a bool value based on whether any relative objects with that id
+        // exist in the database
+
+        private static bool verifySupplierID(int selectedID) 
         {
             bool verified = false;
             var results = Data.GetNorthwindContext().Suppliers.Where(p => p.SupplierId == selectedID);
@@ -616,7 +667,7 @@ namespace NorthwindConsole
             return verified;
         }
 
-        private static bool verifyProductID(int selectedID) //TODO: Make these Validation Result Methods
+        private static bool verifyProductID(int selectedID) 
         {
             bool verified = false;
             var results = Data.GetNorthwindContext().Products.Where(p => p.ProductId == selectedID);
@@ -624,22 +675,16 @@ namespace NorthwindConsole
             {
                 verified = true;
             }
-            else{
-                Model.Data.getLogger().Error("Product Not Found");
-            }
             return verified;
         }
 
-        private static bool verifyCategoryID(int selectedID) //TODO: Make these Validation Result Methods
+        private static bool verifyCategoryID(int selectedID) 
         {
             bool verified = false;
             var results = Data.GetNorthwindContext().Categories.Where(p => p.CategoryId == selectedID);
             if(results.Count()!=0)
             {
                 verified = true;
-            }
-            else{
-                Model.Data.getLogger().Error("Category Not Found");
             }
             return verified;
         }
@@ -681,6 +726,7 @@ namespace NorthwindConsole
         private static void deleteCategory()
         {
             View.deleteCatePrompt();
+            // user is given list of categories to select from
             View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(c => c.CategoryId));
             int userChoice = 0;
             string userInput =  Console.ReadLine();
@@ -688,7 +734,7 @@ namespace NorthwindConsole
             {
                 Data.getLogger().Error("Not Valid Int");
             }
-            else if(verifyProductID(userChoice))
+            else if(verifyCategoryID(userChoice)) // selected category's existance is verified
             {     
                 var query = Data.GetNorthwindContext().Categories.Where(c => c.CategoryId == userChoice);
                 Category category = query.First();
@@ -708,11 +754,16 @@ namespace NorthwindConsole
                     Data.getLogger().Info("Category {0} Deletion Aborted", category.CategoryName);
                 }
             }
+            else
+            {
+                Data.getLogger().Error("Category Not Found");
+            }
         }
 
         private static void editCategory()
         {
             View.editCategorySelectionPrompt();
+            // user is given a list of categories to select from
             View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(c => c.CategoryId));
             string userInput =  Console.ReadLine();
             int selectedCategoryID;
@@ -723,19 +774,21 @@ namespace NorthwindConsole
             {
                 Data.getLogger().Error("Not Valid Int");
             }
-            else if(verifyProductID(tempInt))
+            else if(verifyCategoryID(tempInt))// existance of selected category is verified
             {
                 selectedCategoryID = tempInt;
                 Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
                 query = dbContext.Categories.Where(c => c.CategoryId == selectedCategoryID);
                 category = query.First();
+                Data.getLogger().Info("Category Selected - {0}", category.CategoryName);
                 bool editing = true;
-
+                // user is given option to perform several edits, redundant edits, a single edit, or none at all
                 while(editing)
                 {
                     View.editCategoryOptionsPrompt(category);
                     string editCategoryChoice = Console.ReadLine();
-
+                    Data.getLogger().Info("Category Editing Choice - {0}", editCategoryChoice);
+                    // user is given option of which property they would like to edit
                     if(editCategoryChoice == "1")
                     {
                         // User Provides New Name
@@ -764,7 +817,7 @@ namespace NorthwindConsole
                 var isValid = Validator.TryValidateObject(category, context, results, true);
                 if (isValid)
                 {
-                    // check for unique name
+                    // check for unique name, takes into account item already exists
                     
                     if(dbContext.Categories.Any(c => c.CategoryName == category.CategoryName && c.CategoryId != category.CategoryId))
                     {
@@ -789,6 +842,7 @@ namespace NorthwindConsole
                 }
                 if (!isValid)
                 {
+                    // Reasons why item did not pass validation are logged
                     Data.getLogger().Error("Item Not Saved");
                     foreach (var result in results)
                     {
@@ -796,12 +850,17 @@ namespace NorthwindConsole
                     }
                 }
 
-            }            
+            } 
+            else
+            {
+                Data.getLogger().Error("Category Not Found");
+            }           
         }
 
         private static void displayCategoryAndRelatedProducts()
         {
             View.promptCategorySelection();
+            // user is given a list of categories to choose from
             View.displayCategorySelect(Data.GetNorthwindContext().Categories.OrderBy(p => p.CategoryId));
             int tempInt;
             string userInput = Console.ReadLine();
@@ -809,11 +868,15 @@ namespace NorthwindConsole
             {
                 Data.getLogger().Error("Not Valid Int");
             }
-            else
+            else if(verifyCategoryID(tempInt))// category's existance is verified
             {
                 Data.getLogger().Info($"CategoryId {tempInt} selected");
                 Category category = Data.GetNorthwindContext().Categories.Include("Products").FirstOrDefault(c => c.CategoryId == tempInt);
                 View.displayCategoryAndRelatedProducts(category);
+            }
+            else
+            {
+                Data.getLogger().Error("Category Not Found");
             }
         }
 
@@ -858,6 +921,8 @@ namespace NorthwindConsole
             }
             if (!isValid)
             {
+                Data.getLogger().Info("Item not Added");
+                // Reasons why a category failed validation are logged
                 foreach (var result in results)
                 {
                     Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
