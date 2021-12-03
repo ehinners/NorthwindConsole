@@ -139,11 +139,19 @@ namespace NorthwindConsole
                 string yesOrNo = parseBool(userInput);
                 if(yesOrNo == "true")
                 {
-                    Data.getLogger().Info("Product {0} Deleted", product.ProductName);
-                    //Data.GetNorthwindContext().Remove(product);
-                    Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
-                    dbContext.DeleteProduct(product);
-                    // delete product handles orphans
+                    try
+                    {
+                        Data.getLogger().Info("Product {0} Deleted", product.ProductName);
+                        //Data.GetNorthwindContext().Remove(product);
+                        Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
+                        dbContext.DeleteProduct(product);
+                        // delete product handles orphans
+                    }
+                    catch(Exception e)
+                    {
+                        Data.getLogger().Error(e.Message);
+                    }
+                    
                 }
                 else
                 {
@@ -426,7 +434,7 @@ namespace NorthwindConsole
                     catch (Exception ex)
                     {
                         Model.Data.getLogger().Error(ex.Message);
-                        }
+                    }
                 }
                 else
                 {
@@ -745,9 +753,17 @@ namespace NorthwindConsole
                 string yesOrNo = parseBool(userInput);
                 if(yesOrNo == "true")
                 {
-                    Data.getLogger().Info("Category {0} Deleted", category.CategoryName);                    
-                    Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
-                    dbContext.DeleteCategory(category);
+                    try
+                    {
+                        Data.getLogger().Info("Category {0} Deleted", category.CategoryName);                    
+                        Northwind_88_EHContext dbContext = Data.GetNorthwindContext();
+                        dbContext.DeleteCategory(category);
+                    }
+                    catch(Exception e)
+                    {
+                        Data.getLogger().Error(e.Message);
+                    }
+                    
                 }
                 else
                 {
