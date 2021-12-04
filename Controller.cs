@@ -605,6 +605,7 @@ namespace NorthwindConsole
             } // if the user allowed null values, or all input was validated, final validation can proceed
             if(permissed)
             {
+                
                 ValidationContext context = new ValidationContext(product, null, null);
                 List<ValidationResult> results = new List<ValidationResult>();
 
@@ -617,23 +618,37 @@ namespace NorthwindConsole
                     isValid = false;
                     results.Add(new ValidationResult("Name exists", new string[] { "ProductName" }));
                 }
-                if(!verifyCategoryID((int)product.CategoryId))
-                {
-                    // generate validation error
-                    isValid = false;
-                    results.Add(new ValidationResult("Category Does Not exist", new string[] { "ProductName" }));
+                try{
+                    if(product.CategoryId != null)
+                    {
+                        if(!verifyCategoryID((int)product.CategoryId))
+                        {
+                            // generate validation error
+                            isValid = false;
+                            results.Add(new ValidationResult("Category Does Not exist", new string[] { "ProductName" }));
+                        }
+                    }
+                    if(product.SupplierId != null)
+                    {
+                        if(!verifySupplierID((int)product.SupplierId))
+                        {
+                            // generate validation error
+                            isValid = false;
+                            results.Add(new ValidationResult("Supplier Does Not exist", new string[] { "ProductName" }));
+                        }
+                    }
+                    
+                    
                 }
-                if(!verifySupplierID((int)product.SupplierId))
+                catch(Exception yyyy)
                 {
-                    // generate validation error
-                    isValid = false;
-                    results.Add(new ValidationResult("Supplier Does Not exist", new string[] { "ProductName" }));
+                    Data.getLogger().Error(yyyy.Message);
                 }
-                
+                    
 
                 if(isValid)
                 {
-                     Data.getLogger().Info("Validation passed");
+                    Data.getLogger().Info("Validation passed");
                     try
                     {
                         // Create and save a new Product        
@@ -654,6 +669,8 @@ namespace NorthwindConsole
                         Data.getLogger().Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
                     }
                 }
+                
+                
             }
                
         }

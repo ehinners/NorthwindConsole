@@ -53,8 +53,7 @@ namespace NorthwindConsole
             Any feature not demonstrated in the video will not be applied to the project grade.
 
             */
-            // TODO: ACCOUNT FOR ORDERDETAIL ORPHANS WHEN DELETING ORPHANS FROM DELETING A CATEGORY
-            Console.Clear();
+            //Console.Clear();
             Console.WriteLine("");
 
             // dotnet ef dbcontext scaffold "Server=bitsql.wctc.edu;Database=Northwind_88_EH;User ID=YYY;Password=ZZZ" Microsoft.EntityFrameworkCore.SqlServer -o Model

@@ -116,6 +116,14 @@ namespace NorthwindConsole
             Console.ForegroundColor = ConsoleColor.Blue;
             foreach (var item in query)
             {
+                if(item.Discontinued)
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
                 Console.WriteLine($"{item.ProductId}) {item.ProductName}");
             }
             Console.ForegroundColor = ConsoleColor.White;
