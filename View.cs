@@ -142,15 +142,23 @@ namespace NorthwindConsole
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void deleteCateConfirmation(Category category)
+        private static void categoryOrphanWarning(Category category)
         {
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.Black;
-            System.Console.WriteLine("This Will Delete {0} Orphan Items", Data.GetNorthwindContext().Products.Where(p=>p.CategoryId == category.CategoryId).Count());
-            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.Write("This Will Delete {0} Orphan Items", Data.GetNorthwindContext().Products.Where(p=>p.CategoryId == category.CategoryId).Count());
             Console.BackgroundColor = ConsoleColor.Black;
-            System.Console.WriteLine("Are you SURE you want to DELETE Category {0}? (Y/N)", category.CategoryName);
-            
+            System.Console.Write("      ");            
+            Console.BackgroundColor = ConsoleColor.Black;
+            System.Console.Write("  ");  
+            System.Console.WriteLine("");  
+        }
+
+        public static void deleteCateConfirmation(Category category)
+        {
+            categoryOrphanWarning(category);
+            Console.ForegroundColor = ConsoleColor.DarkRed;            
+            System.Console.WriteLine("Are you SURE you want to DELETE Category {0}? (Y/N)", category.CategoryName);            
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -256,15 +264,22 @@ namespace NorthwindConsole
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void deleteProdConfirmation(Product product)
+        private static void productOrphanWarning(Product product)
         {
-
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.Black;
-            System.Console.WriteLine("This Will Create {0} Orphan Items", Data.GetNorthwindContext().OrderDetails.Where(o=>o.ProductId == product.ProductId).Count());
-            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.Write("This Will Create {0} Orphan Items", Data.GetNorthwindContext().OrderDetails.Where(o=>o.ProductId == product.ProductId).Count());
             Console.BackgroundColor = ConsoleColor.Black;
-            System.Console.WriteLine("Are you SURE you want to DELETE Product {0}? (Y/N)", product.ProductName);
+            System.Console.Write("");            
+            Console.BackgroundColor = ConsoleColor.Black;
+            System.Console.WriteLine("");
+        }
+
+        public static void deleteProdConfirmation(Product product)
+        {            
+            productOrphanWarning(product);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.WriteLine("Are you SURE you want to DELETE Product {0}? (Y/N)", product.ProductName);            
             Console.ForegroundColor = ConsoleColor.White;            
         }
 
